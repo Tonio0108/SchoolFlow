@@ -2,8 +2,8 @@ import { NavLink } from 'react-router-dom';
 import logo from '../assets/logo.png'; // adapte selon ton chemin
 
 const Navbar = () => {
-  const baseClass = 'me-10 transition hover:text-emerald-600';
-  const activeClass = 'text-emerald-600 font-bold';
+  const BaseClass = 'me-10 transition hover:text-emerald-600';
+  const ActiveClass = 'text-emerald-600 font-bold';
 
   return (
     <div className="w-full h-15 shadow-lg p-2 px-5 flex justify-between items-center">
@@ -18,16 +18,16 @@ const Navbar = () => {
           to="/"
           end
           className={({ isActive }) =>
-            `${baseClass} ${isActive ? activeClass : ''}`
+            `${BaseClass} ${isActive ? ActiveClass : ''}`
           }
         >
           Accueil
         </NavLink>
 
         <NavLink
-          to="/emploi"
+          to="/emploi_du_temps"
           className={({ isActive }) =>
-            `${baseClass} ${isActive ? activeClass : ''}`
+            `${BaseClass} ${isActive ? ActiveClass : ''}`
           }
         >
           Emploi du temps
@@ -36,7 +36,7 @@ const Navbar = () => {
         <NavLink
           to="/classes"
           className={({ isActive }) =>
-            `${baseClass} ${isActive ? activeClass : ''}`
+            `${BaseClass} ${isActive ? ActiveClass : ''}`
           }
         >
           Classes
@@ -45,7 +45,7 @@ const Navbar = () => {
         <NavLink
           to="/salles"
           className={({ isActive }) =>
-            `${baseClass} ${isActive ? activeClass : ''}`
+            `${BaseClass} ${isActive ? ActiveClass : ''}`
           }
         >
           Salles
@@ -54,7 +54,7 @@ const Navbar = () => {
         <NavLink
           to="/professeurs"
           className={({ isActive }) =>
-            `${baseClass} ${isActive ? activeClass : ''}`
+            `${BaseClass} ${isActive ? ActiveClass : ''}`
           }
         >
           Professeurs
