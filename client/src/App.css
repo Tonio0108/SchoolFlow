@@ -2,3 +2,44 @@
   max-width: 1280px;
   margin: 0;
 }
+
+#logo{
+  animation: Fade 500ms ease-in;
+}
+
+#description h3{
+  animation: Fade 1s ease-in;
+}
+
+#description p{
+  animation: Fade 1.5s ease-in;
+}
+
+#description a{
+  animation: Fade 2s ease-in;
+}
+
+th, tr {
+  border-bottom: solid 1px rgb(202, 202, 202);
+  padding: 3px;
+}
+tr{
+  height: 3rem;
+}
+
+tr:nth-child(2n){
+  background-color: rgb(230, 230, 230);
+}
+
+#modal{
+  background-color: rgba(0, 0, 0, 0.5)
+}
+
+@keyframes Fade {
+  from {
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}

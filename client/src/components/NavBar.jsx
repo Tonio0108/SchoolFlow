@@ -6,7 +6,7 @@ const Navbar = () => {
   const ActiveClass = 'text-emerald-600 font-bold';
 
   return (
-    <div className="w-full h-15 shadow-lg p-2 px-5 flex justify-between items-center">
+    <div className="fixed w-full h-15 shadow-lg p-2 px-5 flex justify-between items-center">
       <div className="w-1/12">
         <NavLink to="/">
           <img src={logo} width={40} height={40} alt="logo UF" />
