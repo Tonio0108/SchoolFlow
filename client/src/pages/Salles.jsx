@@ -2,7 +2,7 @@ import { useState } from "react";
 import Confirm from "../components/Confirm";
 import Dropdown from "../components/DropDownActions";
 
-export default function Classes(){
+export default function Salles(){
 
     const [openModal, setOpenModal] = useState(false)
     const [ openForm, setOpenForm ] = useState(false)
@@ -11,7 +11,7 @@ export default function Classes(){
             <div className="flex justify-center h-full w-full p-3">
                 <div className='w-full my-auto h-6/7 text-center p-3'>
                     <div className="flex flex-col h-full">
-                        <h1 className="mb-3 font-semibold text-lg">Liste des classes dans notre établissement</h1>
+                        <h1 className="mb-3 font-semibold text-lg">Liste des salles dans notre établissement</h1>
                         <div className="mt-2 py-3 shadow">
                             <form action="">
                                 <label className="text-gray-800 me-4" htmlFor="classId">Identifiant :</label>
@@ -19,9 +19,9 @@ export default function Classes(){
                                     className="w-30 me-4 px-3 py-1 text-gray-800 outline-0 border
                                      border-gray-400 shadow rounded
                                      focus:shadow focus:shadow-emerald-600" 
-                                    name="classId" 
+                                    name="RoomId" 
                                     type="text" />
-                                <label className="text-gray-800 me-4" htmlFor="className">Nom de la classe :</label>
+                                <label className="text-gray-800 me-4" htmlFor="RoomLabel">Libellé :</label>
                                 <input 
                                     className="me-4 px-3 py-1 text-gray-800 outline-0 border
                                      border-gray-400 shadow rounded
@@ -41,8 +41,8 @@ export default function Classes(){
                             <table className="text-sm">
                                 <thead className="text-gray-800">
                                     <tr>
-                                        <th>Identifiant de la classe</th>
-                                        <th>Nom de la classe</th>
+                                        <th>Identifiant de la salle</th>
+                                        <th>Libellé</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -64,7 +64,7 @@ export default function Classes(){
                 <Confirm 
                     isOpen={openModal} 
                     title={'Suppression'} 
-                    message={'Voulez vous vraiment supprimer cette classe ?'}
+                    message={'Voulez vous vraiment supprimer cette salle ?'}
                     onClose={() => setOpenModal(false)} />
                 <EditModal isOpen={openForm} onClose={() => setOpenForm(false)} />
             </div>
@@ -79,18 +79,18 @@ function EditModal({isOpen,onClose}){
         <div  className="modal fixed inset-0 flex items-center justify-center z-1">
           <div className="bg-white rounded-lg shadow-lg p-6 w-100">
             <h1 className="text-lg font-semibold text-center mb-4 text-gray-800">
-              Modification d'une classe
+              Modification d'une salle
             </h1>
 
             <form action="">
-                <label className="block text-gray-800 me-4 mb-3" htmlFor="classId">Identifiant :</label>
+                <label className="block text-gray-800 me-4 mb-3" htmlFor="RoomId">Identifiant :</label>
                 <input 
                     className="me-4 mb-4 w-full px-3 py-1 text-gray-800 outline-0 border
                      border-gray-400  shadow rounded
                      focus:shadow focus:shadow-emerald-600" 
                     name="classId" 
                     type="text" />
-                <label className="block text-gray-800 me-4 mb-3" htmlFor="className">Nom de la classe :</label>
+                <label className="block text-gray-800 me-4 mb-3" htmlFor="RoomLabel">Libellé :</label>
                 <input 
                     className="me-4 mb-4 w-full px-3 py-1 text-gray-800 outline-0 border
                      border-gray-400  shadow rounded

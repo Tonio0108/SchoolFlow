@@ -31,8 +31,9 @@ tr:nth-child(2n){
   background-color: rgb(230, 230, 230);
 }
 
-#modal{
-  background-color: rgba(0, 0, 0, 0.5)
+.modal{
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: Fade 200ms ease-in;
 }
 
 @keyframes Fade {

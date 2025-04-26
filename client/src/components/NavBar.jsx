@@ -34,6 +34,15 @@ const Navbar = () => {
         </NavLink>
 
         <NavLink
+          to="/matieres"
+          className={({ isActive }) =>
+            `${BaseClass} ${isActive ? ActiveClass : ''}`
+          }
+        >
+          Matières
+        </NavLink>
+
+        <NavLink
           to="/classes"
           className={({ isActive }) =>
             `${BaseClass} ${isActive ? ActiveClass : ''}`
