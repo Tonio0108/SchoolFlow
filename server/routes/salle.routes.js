@@ -10,6 +10,16 @@ salleRouter.get('', async (req, res)=>{
     }
 })
 
+
+salleRouter.get('/disponible', async (req, res)=>{
+    try {
+        const response = await pool.query("SELECT s.nomsalle from salle s LEFT OUTER JOIN emploidutemps e ON s.idsalle = e.idsalle WHERE e.idsalle IS NULL")
+        res.send(response.rows)
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
+
 salleRouter.post('/ajouter', async (req, res)=>{
     try {
         const {nomsalle} = req.body
