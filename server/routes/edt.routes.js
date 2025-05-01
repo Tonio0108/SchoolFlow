@@ -3,7 +3,17 @@ const pool = require('../databases/db')
 
 edtRouter.get('/', async(req, res)=>{
     try {
-        const response = await pool.query('SELECT * FROM emploidutemps')
+        const response = await pool.query('SELECT m.nommatiere, n.nomniveau, p.nomprofesseur, s.nomsalle, e.date, e.heure FROM emploidutemps e, matiere m, salle s, professeur p, niveau n WHERE e.idmatiere = m.idmatiere AND e.idsalle = s.idsalle AND e.idprofesseur = p.idprofesseur AND e.idniveau = n.idniveau')
+        res.status(201).json(response.rows)
+    } catch (error) {
+        res.status(401).send(error)
+    }
+});
+
+edtRouter.get('/parniveau/:idniveau', async(req, res)=>{
+    try {
+        const id = req.params.idniveau
+        const response = await pool.query(`SELECT m.nommatiere, n.nomniveau, p.nomprofesseur, s.nomsalle, e.date, e.heure FROM emploidutemps e, matiere m, salle s, professeur p, niveau n WHERE e.idmatiere = m.idmatiere AND e.idsalle = s.idsalle AND e.idprofesseur = p.idprofesseur AND e.idniveau = n.idniveau AND  e.idniveau = ${id}`)
         res.status(201).json(response.rows)
     } catch (error) {
         res.status(401).send(error)
