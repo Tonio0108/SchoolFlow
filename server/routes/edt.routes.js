@@ -39,7 +39,7 @@ edtRouter.put('/modifier/:idEmploi', async(req, res)=>{
     try {
         const id = req.params.idEmploi
         const {idMatiere, idSalle, idNiveau, idProfesseur, date, heure} = req.body
-        await pool.query(`UPDATE emploidutemps SET idmatiere = $1, idsalle = $2, idniveau = $3, idprofesseur = $4, date = $5, heure = $6 WHERE idprofesseur = ${id}`, [idMatiere, idSalle, idNiveau, idProfesseur, date, heure])
+        await pool.query(`UPDATE emploidutemps SET idmatiere = $1, idsalle = $2, idniveau = $3, idprofesseur = $4, date = $5, heure = $6 WHERE idemploi = ${id}`, [idMatiere, idSalle, idNiveau, idProfesseur, date, heure])
         res.status(200).send('Modification éffectuer');
     } catch (error) {
         res.status(401).json(error)
