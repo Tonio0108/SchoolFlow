@@ -12,8 +12,7 @@ CREATE TABLE salle (
 CREATE TABLE professeur (
     idprofesseur SERIAL PRIMARY KEY,
     nomprofesseur VARCHAR(50),
-    prenomsprofesseur VARCHAR(50),
-    gradeprofesseur VARCHAR(50)
+    prenomsprofesseur VARCHAR(50)
 );
 
 CREATE TABLE niveau(

@@ -1,6 +1,7 @@
 const niveauRouter = require('express').Router()
 const pool = require('../databases/db')
 
+/*Liste des niveaux*/
 niveauRouter.get('/', async(req, res)=>{
     try {
         const response = await pool.query('SELECT * FROM niveau')
@@ -10,6 +11,7 @@ niveauRouter.get('/', async(req, res)=>{
     }
 });
 
+/*Ajout des niveaux*/
 niveauRouter.post('/ajouter', async (req, res)=>{
     try {
         const {nomniveau} = req.body
@@ -21,6 +23,7 @@ niveauRouter.post('/ajouter', async (req, res)=>{
     }
 });
 
+/*Modification des niveaux*/
 niveauRouter.put('/modifier/:idNiveau', async(req, res)=>{
     try {
         const id = req.params.idNiveau
@@ -32,6 +35,7 @@ niveauRouter.put('/modifier/:idNiveau', async(req, res)=>{
     }
 });
 
+/*Suppréssion des niveau*/
 niveauRouter.delete('/supprimer/:idNiveau', async (req, res)=>{
     try {
         const id = req.params.idNiveau
@@ -41,5 +45,18 @@ niveauRouter.delete('/supprimer/:idNiveau', async (req, res)=>{
         res.status(401).send(error)
     }
 })
+
+/*Recherche de niveau*/
+niveauRouter.get('/recherche/:nomNiveau', async (req, res)=>{
+    try {
+        const nomNiveau = req.params.nomNiveau
+        const response = await pool.query(`SELECT * FROM niveau WHERE nomniveau ILIKE '%${nomNiveau}%'`)
+        res.status(201).send(response.rows)
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
+
+
 
 module.exports = niveauRouter

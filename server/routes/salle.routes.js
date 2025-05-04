@@ -1,7 +1,8 @@
 const salleRouter = require('express').Router()
 const pool = require('../databases/db')
 
-salleRouter.get('', async (req, res)=>{
+/*Liste des salles*/
+salleRouter.get('/', async (req, res)=>{
     try {
         const response = await pool.query("SELECT * FROM salle")
         res.status(200).json(response.rows)
@@ -10,16 +11,19 @@ salleRouter.get('', async (req, res)=>{
     }
 })
 
-
-salleRouter.get('/disponible', async (req, res)=>{
+/*Liste des salles disponibles à une heure donner*/
+salleRouter.get('/disponible/:heure', async (req, res)=>{
     try {
-        const response = await pool.query("SELECT s.nomsalle from salle s LEFT OUTER JOIN emploidutemps e ON s.idsalle = e.idsalle WHERE e.idsalle IS NULL")
+        const heure = req.params.heure
+        /*const response = await pool.query("SELECT s.nomsalle from salle s LEFT OUTER JOIN emploidutemps e ON s.idsalle = e.idsalle WHERE e.idsalle IS NULL")*/
+        const response = await pool.query(`SELECT s.nomsalle from salle s LEFT OUTER JOIN emploidutemps e ON s.idsalle = e.idsalle WHERE e.idsalle IS NULL AND e.heure = '${heure}' `)
         res.send(response.rows)
     } catch (error) {
         res.status(401).send(error)
     }
 })
 
+/*Ajour de salles*/
 salleRouter.post('/ajouter', async (req, res)=>{
     try {
         const {nomsalle} = req.body
@@ -30,6 +34,7 @@ salleRouter.post('/ajouter', async (req, res)=>{
     }
 })
 
+/*Modification de salles*/
 salleRouter.put('/modifier/:idsalle', async (req, res)=>{
     try {
         const id = req.params.idsalle
@@ -41,6 +46,7 @@ salleRouter.put('/modifier/:idsalle', async (req, res)=>{
     }
 })
 
+/*Suppréssion de salles*/
 salleRouter.delete('/supprimer/:idsalle', async (req, res)=>{
     try {
         const id = req.params.idsalle

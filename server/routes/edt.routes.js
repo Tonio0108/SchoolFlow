@@ -1,6 +1,7 @@
 const edtRouter = require('express').Router()
 const pool = require('../databases/db')
 
+/*Liste des emplois du temps*/
 edtRouter.get('/', async(req, res)=>{
     try {
         const response = await pool.query('SELECT m.nommatiere, n.nomniveau, p.nomprofesseur, s.nomsalle, e.date, e.heure FROM emploidutemps e, matiere m, salle s, professeur p, niveau n WHERE e.idmatiere = m.idmatiere AND e.idsalle = s.idsalle AND e.idprofesseur = p.idprofesseur AND e.idniveau = n.idniveau')
@@ -10,6 +11,7 @@ edtRouter.get('/', async(req, res)=>{
     }
 });
 
+/*emplois du temps d'un niveau*/
 edtRouter.get('/parniveau/:idniveau', async(req, res)=>{
     try {
         const id = req.params.idniveau
@@ -20,6 +22,7 @@ edtRouter.get('/parniveau/:idniveau', async(req, res)=>{
     }
 });
 
+/*Ajout d'emploi du temps*/
 edtRouter.post('/ajouter', async (req, res)=>{
     try {
         const {idMatiere, idSalle, idNiveau, idProfesseur, date, heure} = req.body
@@ -31,6 +34,7 @@ edtRouter.post('/ajouter', async (req, res)=>{
     }
 });
 
+/*Modification*/
 edtRouter.put('/modifier/:idEmploi', async(req, res)=>{
     try {
         const id = req.params.idEmploi
@@ -42,6 +46,7 @@ edtRouter.put('/modifier/:idEmploi', async(req, res)=>{
     }
 });
 
+/*Suppréssion*/
 edtRouter.delete('/supprimer/:idEmploi', async (req, res)=>{
     try {
         const id = req.params.idEmploi
@@ -51,5 +56,6 @@ edtRouter.delete('/supprimer/:idEmploi', async (req, res)=>{
         res.status(401).send(error)
     }
 })
+
 
 module.exports = edtRouter

@@ -1,6 +1,7 @@
 const matiereRouter = require('express').Router()
 const pool = require('../databases/db')
 
+/*Liste des matiere*/
 matiereRouter.get('/', async(req, res)=>{
     try {
         const response = await pool.query('SELECT * FROM matiere')
@@ -10,6 +11,7 @@ matiereRouter.get('/', async(req, res)=>{
     }
 });
 
+/*Ajouts des matiere*/
 matiereRouter.post('/ajouter', async (req, res)=>{
     try {
         const {nomMatiere} = req.body
@@ -21,6 +23,7 @@ matiereRouter.post('/ajouter', async (req, res)=>{
     }
 });
 
+/*Modification des matiere*/
 matiereRouter.put('/modifier/:idMatiere', async(req, res)=>{
     try {
         const id = req.params.idMatiere
@@ -32,6 +35,7 @@ matiereRouter.put('/modifier/:idMatiere', async(req, res)=>{
     }
 });
 
+/*Suppression des matiere*/
 matiereRouter.delete('/supprimer/:idMatiere', async (req, res)=>{
     try {
         const id = req.params.idMatiere
@@ -42,4 +46,14 @@ matiereRouter.delete('/supprimer/:idMatiere', async (req, res)=>{
     }
 })
 
+/*Recherche de matiere*/
+matiereRouter.get('/recherche/:nomMatiere', async (req, res) =>{
+    try {
+        const nomMatiere = req.params.nomMatiere
+        response = await pool.query(`SELECT * FROM matiere WHERE nommatiere ILIKE '%${nomMatiere}%'`)
+        res.status(201).json(response.rows)
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
 module.exports = matiereRouter

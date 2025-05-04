@@ -1,6 +1,7 @@
 const professeurRoutes = require('express').Router()
 const pool = require('../databases/db')
 
+/*Liste des professeurs*/
 professeurRoutes.get('/', async(req, res)=>{
     try {
         const response = await pool.query('SELECT * FROM professeur')
@@ -10,10 +11,11 @@ professeurRoutes.get('/', async(req, res)=>{
     }
 });
 
+/*Ajout de professeur*/
 professeurRoutes.post('/ajouter', async (req, res)=>{
     try {
-        const {nomProfesseur, prenomsProfesseur, gradeProfesseur} = req.body
-        await pool.query('INSERT INTO professeur (nomprofesseur, prenomsprofesseur, gradeprofesseur) VALUES ($1, $2, $3)', [nomProfesseur, prenomsProfesseur, gradeProfesseur]);
+        const {nomProfesseur, prenomsProfesseur} = req.body
+        await pool.query('INSERT INTO professeur (nomprofesseur, prenomsprofesseur) VALUES ($1, $2)', [nomProfesseur, prenomsProfesseur]);
         res.status(200).send('Insertion éffectuer');
     } catch (error) {
         console.log(error)
@@ -21,22 +23,35 @@ professeurRoutes.post('/ajouter', async (req, res)=>{
     }
 });
 
+/*Modification de professeur*/
 professeurRoutes.put('/modifier/:idProfesseur', async(req, res)=>{
     try {
         const id = req.params.idProfesseur
-        const {nomProfesseur, prenomsProfesseur, gradeProfesseur} = req.body
-        await pool.query(`UPDATE professeur SET nomprofesseur = $1, prenomsprofesseur = $2, gradeProfesseur = $3 WHERE idprofesseur = ${id}`, [nomProfesseur, prenomsProfesseur, gradeProfesseur])
+        const {nomProfesseur, prenomsProfesseur} = req.body
+        await pool.query(`UPDATE professeur SET nomprofesseur = $1, prenomsprofesseur = $2 WHERE idprofesseur = ${id}`, [nomProfesseur, prenomsProfesseur])
         res.status(200).send('Modification éffectuer');
     } catch (error) {
         res.status(401).send(error)
     }
 });
 
+/*Suppréssion de professeur*/
 professeurRoutes.delete('/supprimer/:idProfesseur', async (req, res)=>{
     try {
         const id = req.params.idProfesseur
         await pool.query(`DELETE FROM professeur WHERE idprofesseur = ${id}`)
         res.status(201).send('Suppréssion éffectuer')
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
+
+/*Recherche de professeur*/
+professeurRoutes.get('/recherche/:nomProfesseur', async (req, res) =>{
+    try {
+        const nomProfesseur = req.params.nomProfesseur
+        response = await pool.query(`SELECT * FROM professeur WHERE nomprofesseur ILIKE '%${nomProfesseur}%' OR prenomsprofesseur ILIKE '%${nomProfesseur}%'`)
+        res.status(201).json(response.rows)
     } catch (error) {
         res.status(401).send(error)
     }
