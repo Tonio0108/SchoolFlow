@@ -57,4 +57,15 @@ salleRouter.delete('/supprimer/:idsalle', async (req, res)=>{
     }
 })
 
+/*Recherche de salles*/
+salleRouter.get('/recherche/:nomsalle', async (req, res)=>{
+    try {
+        const nomsalle = req.params.nomsalle
+        const response = await pool.query(`SELECT * FROM salle WHERE nomsalle ILIKE '%${nomsalle}%'`)
+        res.status(200).send(response.rows)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
 module.exports = salleRouter
