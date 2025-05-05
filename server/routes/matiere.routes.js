@@ -14,7 +14,7 @@ matiereRouter.post('/ajouter', async (req, res)=>{
     try {
         const {nomMatiere} = req.body
         await pool.query('INSERT INTO matiere (nommatiere) VALUES ($1)', [nomMatiere]);
-        res.status(200).send('Insertion éffectuer');
+        res.status(200).send('Insertion éffectuée');
     } catch (error) {
         console.log(error)
         res.status(401).json(error)
