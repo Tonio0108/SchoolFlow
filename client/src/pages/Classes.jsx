@@ -15,6 +15,7 @@ export default function Matieres(){
     const [ classes, setClasses ] = useState([])
     const [ classeId, setClasseId ] = useState('')
     const [searchTerm, setSearchTerm] = useState('');
+    const [nomClasse, setNomClasse] = useState('')
 
 
     const fetchClasses = () => {
@@ -137,6 +138,7 @@ export default function Matieres(){
                                                 onUpdate={() => {
                                                     setClasseId(classe.idniveau)
                                                     setOpenForm(true)
+                                                    setNomClasse(classe.nomniveau)
                                                 }} 
                                                 onDelete={() => { 
                                                     setClasseId(classe.idniveau);
@@ -180,12 +182,15 @@ export default function Matieres(){
                 isOpen={openForm} 
                 onClose={() => setOpenForm(false)} 
                 onSubmit={(newNom) => updateClasse(classeId, newNom)} 
+                nomClasse={nomClasse}
+                setNomClasse={setNomClasse}
                 />
 
                 <AddModal 
                 isOpen={openAddForm} 
                 onClose={() => setOpenAddForm(false)} 
                 onSubmit={(newNom) => AddClasse(newNom)} 
+
                 />
 
 
@@ -194,9 +199,7 @@ export default function Matieres(){
     )
 }
 
-function EditModal({ isOpen, onClose, onSubmit }) {
-    const [nomNiveau, setNomNiveau] = useState('');
-  
+function EditModal({ isOpen, onClose, onSubmit, nomClasse, setNomClasse }) {
     if (!isOpen) return null;
   
     return (
@@ -208,12 +211,12 @@ function EditModal({ isOpen, onClose, onSubmit }) {
   
           <form onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(nomNiveau);
+            onSubmit(nomClasse);
           }}>
             <label className="block text-gray-800 me-4 mb-3" htmlFor="NomMatiere">Nom de la classe :</label>
             <input 
-              value={nomNiveau}
-              onChange={(e) => setNomNiveau(e.target.value)}
+              value={nomClasse}
+              onChange={(e) => setNomClasse(e.target.value)}
               className="me-4 mb-4 w-full px-3 py-1 text-gray-800 outline-0 border
               border-gray-400  shadow rounded
               focus:shadow focus:shadow-emerald-600" 

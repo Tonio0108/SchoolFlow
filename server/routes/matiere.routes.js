@@ -14,8 +14,8 @@ matiereRouter.get('/', async(req, res)=>{
 /*Ajouts des matiere*/
 matiereRouter.post('/ajouter', async (req, res)=>{
     try {
-        const {nomMatiere} = req.body
-        await pool.query('INSERT INTO matiere (nommatiere) VALUES ($1)', [nomMatiere]);
+        const {nomMatiere,enseignant} = req.body
+        await pool.query('INSERT INTO matiere (nommatiere,enseignant) VALUES ($1, $2)', [nomMatiere,enseignant]);
         res.status(200).send('Insertion éffectué');
     } catch (error) {
         console.log(error)
@@ -26,11 +26,11 @@ matiereRouter.post('/ajouter', async (req, res)=>{
 matiereRouter.put('/modifier/:idMatiere', async (req, res) => {
     try {
       const { idMatiere } = req.params;
-      const { nomMatiere } = req.body;
+      const { nomMatiere, enseignant } = req.body;
   
       await pool.query(
-        'UPDATE matiere SET nommatiere = $1 WHERE idmatiere = $2',
-        [nomMatiere, idMatiere]
+        'UPDATE matiere SET nommatiere = $1, enseignant = $2 WHERE idmatiere = $3',
+        [nomMatiere,enseignant, idMatiere]
       );
   
       res.status(200).send('Modification effectuée');

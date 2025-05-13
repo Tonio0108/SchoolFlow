@@ -14,8 +14,8 @@ professeurRoutes.get('/', async(req, res)=>{
 /*Ajout de professeur*/
 professeurRoutes.post('/ajouter', async (req, res)=>{
     try {
-        const {nomProfesseur, prenomsProfesseur} = req.body
-        await pool.query('INSERT INTO professeur (nomprofesseur, prenomsprofesseur) VALUES ($1, $2)', [nomProfesseur, prenomsProfesseur]);
+        const {nomProfesseur, prenomsProfesseur,identifiant} = req.body
+        await pool.query('INSERT INTO professeur (nomprofesseur, prenomsprofesseur,identifiant) VALUES ($1, $2, $3)', [nomProfesseur, prenomsProfesseur, identifiant]);
         res.status(200).send('Insertion éffectuer');
     } catch (error) {
         console.log(error)
@@ -27,8 +27,8 @@ professeurRoutes.post('/ajouter', async (req, res)=>{
 professeurRoutes.put('/modifier/:idProfesseur', async(req, res)=>{
     try {
         const id = req.params.idProfesseur
-        const {nomProfesseur, prenomsProfesseur} = req.body
-        await pool.query(`UPDATE professeur SET nomprofesseur = $1, prenomsprofesseur = $2 WHERE idprofesseur = ${id}`, [nomProfesseur, prenomsProfesseur])
+        const {nomProfesseur, prenomsProfesseur, identifiant} = req.body
+        await pool.query(`UPDATE professeur SET nomprofesseur = $1, prenomsprofesseur = $2, identifiant = $3 WHERE idprofesseur = ${id}`, [nomProfesseur, prenomsProfesseur, identifiant])
         res.status(200).send('Modification éffectuer');
     } catch (error) {
         res.status(401).send(error)

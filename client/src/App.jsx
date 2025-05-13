@@ -7,6 +7,7 @@ import Classes from './pages/Classes';
 import Salles from './pages/Salles';
 import Professeurs from './pages/Professeurs';
 import Matieres from './pages/Matieres';
+import Edt from './pages/Edt';
 function App() {
 
   return (
@@ -15,6 +16,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/emploi_du_temps" element={<Edt />} />
         <Route path="/matieres" element={<Matieres />} />
         <Route path="/classes" element={<Classes />} />
         <Route path="/salles" element={<Salles />} />

@@ -1,7 +1,7 @@
 CREATE DATABASE gestionedt;
 
 CREATE TABLE matiere (
-    idmatiere SERIAL PRIMARY KEY, nommatiere VARCHAR(50)
+    idmatiere SERIAL PRIMARY KEY, nommatiere VARCHAR(50), enseignant VARCHAR(50)
 );
 
 CREATE TABLE salle (
@@ -12,7 +12,8 @@ CREATE TABLE salle (
 CREATE TABLE professeur (
     idprofesseur SERIAL PRIMARY KEY,
     nomprofesseur VARCHAR(50),
-    prenomsprofesseur VARCHAR(50)
+    prenomsprofesseur VARCHAR(50),
+	identifiant VARCHAR(30)
 );
 
 CREATE TABLE niveau(

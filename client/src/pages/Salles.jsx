@@ -15,6 +15,7 @@ export default function Salles(){
     const [ salles, setSalles ] = useState([])
     const [ salleId, setSalleId ] = useState('')
     const [searchTerm, setSearchTerm] = useState('');
+    const [nomSalle, setNomSalle] = useState('')
 
 
     const fetchSalles = () => {
@@ -138,6 +139,7 @@ export default function Salles(){
                                                 onUpdate={() => {
                                                     setSalleId(salle.idsalle)
                                                     setOpenForm(true)
+                                                    setNomSalle(salle.nomsalle)
                                                 }} 
                                                 onDelete={() => { 
                                                     setSalleId(salle.idsalle);
@@ -172,7 +174,9 @@ export default function Salles(){
                 <EditModal 
                 isOpen={openForm} 
                 onClose={() => setOpenForm(false)} 
-                onSubmit={(newNom) => updateSalle(salleId, newNom)} 
+                onSubmit={(newNom) => updateSalle(salleId, newNom)}
+                setNomSalle={setNomSalle}
+                nomSalle={nomSalle}
                 />
                 <Error
                     isOpen={openModalError} 
@@ -195,8 +199,7 @@ export default function Salles(){
     )
 }
 
-function EditModal({ isOpen, onClose, onSubmit }) {
-    const [nomSalle, setNomSalle] = useState('');
+function EditModal({ isOpen, onClose, onSubmit, nomSalle, setNomSalle  }) {
   
     if (!isOpen) return null;
   
@@ -236,7 +239,7 @@ function EditModal({ isOpen, onClose, onSubmit }) {
     );
   }
 
-function AddModal({ isOpen, onClose, onSubmit }) {
+function AddModal({ isOpen, onClose, onSubmit}) {
 
   const [nomSalle, setNomSalle] = useState('');
   

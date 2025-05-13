@@ -15,7 +15,9 @@ export default function Matieres(){
     const [ profs, setProfs ] = useState([])
     const [ profId, setProfId ] = useState('')
     const [searchTerm, setSearchTerm] = useState('');
-
+    const [nomProf, setNomProf] = useState('')
+    const [prenomsProf, setPrenomsProf] = useState('')
+    const [identifiant, setIdentifiant] = useState('')
 
     const fetchProfs = () => {
         fetch('http://localhost:3000/professeur')
@@ -47,13 +49,13 @@ export default function Matieres(){
         });
     };
 
-    const updateProf = (id, nomProfesseur, prenomsProfesseur) => {
+    const updateProf = (id, nomProfesseur, prenomsProfesseur, identifiant) => {
         fetch(`http://localhost:3000/professeur/modifier/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ nomProfesseur, prenomsProfesseur }),
+          body: JSON.stringify({ nomProfesseur, prenomsProfesseur, identifiant}),
         })
           .then(res => {
             if (!res.ok) throw new Error('Erreur lors de la modification');
@@ -68,13 +70,13 @@ export default function Matieres(){
           .catch(() => setOpenModalUpdateError(true));
       };
 
-    const AddProf = (nomProfesseur, prenomsProfesseur) => {
+    const AddProf = (nomProfesseur, prenomsProfesseur,identifiant) => {
       fetch(`http://localhost:3000/professeur/ajouter`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nomProfesseur, prenomsProfesseur }),
+        body: JSON.stringify({ nomProfesseur, prenomsProfesseur,identifiant }),
       })
         .then(res => {
           if (!res.ok) throw new Error('Erreur lors de la creation');
@@ -122,7 +124,8 @@ export default function Matieres(){
                             <table className="text-sm">
                                 <thead className="text-gray-800">
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Numero</th>
+                                        <th>Identifiant</th>
                                         <th>Nom et prénoms</th>
                                         <th></th>
                                     </tr>
@@ -131,12 +134,17 @@ export default function Matieres(){
                                     { filteredProfs.map((prof) => (
                                         <tr key={prof.idprofesseur}>
                                             <td>{ prof.idprofesseur }</td>
+                                            <td>{ prof.identifiant }</td>
                                             <td>{ prof.nomprofesseur + ' ' + prof.prenomsprofesseur }</td>
+                                            
                                             <td className="text-start">
                                             <Dropdown 
                                                 onUpdate={() => {
                                                     setProfId(prof.idprofesseur)
                                                     setOpenForm(true)
+                                                    setNomProf(prof.nomprofesseur)
+                                                    setPrenomsProf(prof.prenomsprofesseur)
+                                                    setIdentifiant(prof.identifiant)
                                                 }} 
                                                 onDelete={() => { 
                                                     setProfId(prof.idprofesseur);
@@ -179,13 +187,19 @@ export default function Matieres(){
                 <EditModal 
                 isOpen={openForm} 
                 onClose={() => setOpenForm(false)} 
-                onSubmit={(newNom, newPrenoms) => updateProf(profId, newNom, newPrenoms)} 
+                onSubmit={(newNom, newPrenoms, newIdentifiant) => updateProf(profId, newNom, newPrenoms, newIdentifiant)}
+                nomProf={nomProf}
+                setNomProf={setNomProf}
+                prenomsProf={prenomsProf}
+                setPrenomsProf={setPrenomsProf}
+                identifiant={identifiant}
+                setIdentifiant={setIdentifiant}
                 />
 
                 <AddModal 
                 isOpen={openAddForm} 
                 onClose={() => setOpenAddForm(false)} 
-                onSubmit={(newNom, newPrenoms) => AddProf(newNom, newPrenoms)} 
+                onSubmit={(newNom, newPrenoms, newIdentifiant) => AddProf(newNom, newPrenoms, newIdentifiant)} 
                 />
 
 
@@ -194,9 +208,7 @@ export default function Matieres(){
     )
 }
 
-function EditModal({ isOpen, onClose, onSubmit }) {
-    const [nomProf, setNomProf] = useState('');
-    const [prenomsProf, setPrenomsProf] = useState('');
+function EditModal({ isOpen, onClose, onSubmit, nomProf, setNomProf, prenomsProf, setPrenomsProf, identifiant, setIdentifiant }) {
     if (!isOpen) return null;
   
     return (
@@ -208,7 +220,7 @@ function EditModal({ isOpen, onClose, onSubmit }) {
   
           <form onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(nomProf,prenomsProf);
+            onSubmit(nomProf,prenomsProf,identifiant);
           }}>
             <label className="block text-gray-800 me-4 mb-3" htmlFor="nomProfesseur">Nom :</label>
             <input 
@@ -230,6 +242,17 @@ function EditModal({ isOpen, onClose, onSubmit }) {
               name="prenomsProfesseur" 
               type="text" 
             />
+
+            <label className="block text-gray-800 me-4 mb-3" htmlFor="identifiant">Identifiant :</label>
+            <input 
+              value={identifiant}
+              onChange={(e) => setIdentifiant(e.target.value)}
+              className="me-4 mb-4 w-full px-3 py-1 text-gray-800 outline-0 border
+              border-gray-400  shadow rounded
+              focus:shadow focus:shadow-emerald-600" 
+              name="identifiant" 
+              type="text" 
+            />
   
             <div className="flex justify-end mt-5">
               <button type="submit" className=" me-4 bg-emerald-600 text-white px-2 py-1 rounded hover:bg-emerald-700 hover:cursor-pointer transition">
@@ -249,6 +272,7 @@ function AddModal({ isOpen, onClose, onSubmit }) {
 
   const [nomProf, setNomProf] = useState('');
   const [prenomsProf, setPrenomsProf] = useState('');
+  const [identifiant, setIdentifiant] = useState('')
   if (!isOpen) return null;
   
   return (
@@ -260,7 +284,7 @@ function AddModal({ isOpen, onClose, onSubmit }) {
 
         <form onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(nomProf, prenomsProf);
+          onSubmit(nomProf, prenomsProf, identifiant);
         }}>
             <label className="block text-gray-800 me-4 mb-3" htmlFor="nomProfesseur">Nom :</label>
             <input 
@@ -280,6 +304,16 @@ function AddModal({ isOpen, onClose, onSubmit }) {
               border-gray-400  shadow rounded
               focus:shadow focus:shadow-emerald-600" 
               name="prenomsProfesseur" 
+              type="text" 
+            />
+            <label className="block text-gray-800 me-4 mb-3" htmlFor="identifiant">Identifiant :</label>
+            <input 
+              value={identifiant}
+              onChange={(e) => setIdentifiant(e.target.value)}
+              className="me-4 mb-4 w-full px-3 py-1 text-gray-800 outline-0 border
+              border-gray-400  shadow rounded
+              focus:shadow focus:shadow-emerald-600" 
+              name="identifiant" 
               type="text" 
             />
 

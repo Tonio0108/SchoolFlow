@@ -3,6 +3,7 @@ import Confirm from "../components/Confirm";
 import Dropdown from "../components/DropDownActions";
 import Success from "../components/Success";
 import Error from "../components/Error";
+
 export default function Matieres(){
 
     const [openModal, setOpenModal] = useState(false)
@@ -15,14 +16,15 @@ export default function Matieres(){
     const [ matieres, setMatieres ] = useState([])
     const [ matiereId, setMatiereId ] = useState('')
     const [searchTerm, setSearchTerm] = useState('');
-
+    const [nomMatiere, setNomMatiere] = useState('')
+    const [enseignant, setEnseignant] = useState('')
 
     const fetchMatieres = () => {
         fetch('http://localhost:3000/matiere')
           .then(res => res.json())
           .then(data => setMatieres(data))
           .catch(err => console.error(err));
-      };
+      }
       
     useEffect(() => {
     fetchMatieres();
@@ -37,23 +39,23 @@ export default function Matieres(){
         return res.text();
         })
         .then(() => {
-        fetchMatieres(); // <--- Recharge les données
-        setOpenModal(false);
-        setOpenModalSuccess(true);
+        fetchMatieres(); // Recharge les données
+        setOpenModal(false)
+        setOpenModalSuccess(true)
         })
         .catch((err) => {
-        console.error('Erreur:', err);
+        console.error('Erreur:', err)
           setOpenModalError(true)
         });
     };
 
-    const updateMatiere = (id, nomMatiere) => {
+    const updateMatiere = (id, nomMatiere, enseignant) => {
         fetch(`http://localhost:3000/matiere/modifier/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ nomMatiere }),
+          body: JSON.stringify({ nomMatiere, enseignant }),
         })
           .then(res => {
             if (!res.ok) throw new Error('Erreur lors de la modification');
@@ -68,13 +70,13 @@ export default function Matieres(){
           .catch(() => setOpenModalUpdateError(true));
       };
 
-    const AddMatiere = (nomMatiere) => {
+    const AddMatiere = (nomMatiere, enseignant) => {
       fetch(`http://localhost:3000/matiere/ajouter`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nomMatiere }),
+        body: JSON.stringify({ nomMatiere, enseignant }),
       })
         .then(res => {
           if (!res.ok) throw new Error('Erreur lors de la creation');
@@ -122,8 +124,9 @@ export default function Matieres(){
                             <table className="text-sm">
                                 <thead className="text-gray-800">
                                     <tr>
-                                        <th>Code matière</th>
+                                        <th>Index</th>
                                         <th>Nom de la matière</th>
+                                        <th>Enseignant</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -132,11 +135,14 @@ export default function Matieres(){
                                         <tr key={matiere.idmatiere}>
                                             <td>{ matiere.idmatiere }</td>
                                             <td>{ matiere.nommatiere }</td>
+                                            <td>{ matiere.enseignant }</td>
                                             <td className="text-start">
                                             <Dropdown 
                                                 onUpdate={() => {
                                                     setMatiereId(matiere.idmatiere)
                                                     setOpenForm(true)
+                                                    setNomMatiere(matiere.nommatiere)
+                                                    setEnseignant(matiere.enseignant)
                                                 }} 
                                                 onDelete={() => { 
                                                     setMatiereId(matiere.idmatiere);
@@ -157,7 +163,7 @@ export default function Matieres(){
                 <Confirm 
                     isOpen={openModal} 
                     title={'Suppression'} 
-                    message={'Voulez vous vraiment supprimer cette salle ?'}
+                    message={'Voulez vous vraiment supprimer cette matière ?'}
                     onClose={() => setOpenModal(false)}
                     onConfirm={() => Destroy(matiereId)} />
                 <Success
@@ -179,13 +185,17 @@ export default function Matieres(){
                 <EditModal 
                 isOpen={openForm} 
                 onClose={() => setOpenForm(false)} 
-                onSubmit={(newNom) => updateMatiere(matiereId, newNom)} 
+                onSubmit={(newNom, newEnseignant) => updateMatiere(matiereId, newNom, newEnseignant)} 
+                nomMatiere={nomMatiere}
+                enseignant={enseignant}
+                setNomMatiere={setNomMatiere}
+                setEnseignant={setEnseignant}
                 />
 
                 <AddModal 
                 isOpen={openAddForm} 
                 onClose={() => setOpenAddForm(false)} 
-                onSubmit={(newNom) => AddMatiere(newNom)} 
+                onSubmit={(newNom, newEnseignant) => AddMatiere(newNom, newEnseignant)} 
                 />
 
 
@@ -194,9 +204,19 @@ export default function Matieres(){
     )
 }
 
-function EditModal({ isOpen, onClose, onSubmit }) {
-    const [nomMatiere, setNomMatiere] = useState('');
+function EditModal({ isOpen, onClose, onSubmit, nomMatiere, setNomMatiere, enseignant, setEnseignant }) {
+  const [ profs, setProfs ] = useState([])
+  const fetchProfs = () => {
+    fetch('http://localhost:3000/professeur')
+      .then(res => res.json())
+      .then(data => setProfs(data))
+      .catch(err => console.error(err))
+  };
   
+  useEffect(() => {
+  fetchProfs()
+  }, [])
+
     if (!isOpen) return null;
   
     return (
@@ -208,7 +228,7 @@ function EditModal({ isOpen, onClose, onSubmit }) {
   
           <form onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(nomMatiere);
+            onSubmit(nomMatiere,enseignant);
           }}>
             <label className="block text-gray-800 me-4 mb-3" htmlFor="NomMatiere">Nom de la matière :</label>
             <input 
@@ -220,6 +240,25 @@ function EditModal({ isOpen, onClose, onSubmit }) {
               name="NomMatiere" 
               type="text" 
             />
+
+          <label className="block text-gray-800 me-4 mb-3" htmlFor="enseignant">Enseignant :</label>
+          <select 
+            name="enseignant"
+            value={enseignant}
+            onChange={(e) => setEnseignant(e.target.value)}
+            className="me-4 mb-4 w-full px-3 py-1 text-gray-800 outline-0 border
+            border-gray-400 shadow rounded
+            focus:shadow focus:shadow-emerald-600"
+          >
+            <option value="">Choisir un enseignant</option>
+            {
+              profs.map((prof) => (
+                <option key={prof.idprofesseur} value={prof.identifiant}>
+                  {prof.identifiant}
+                </option>
+              ))
+            }
+          </select>
   
             <div className="flex justify-end mt-5">
               <button type="submit" className=" me-4 bg-emerald-600 text-white px-2 py-1 rounded hover:bg-emerald-700 hover:cursor-pointer transition">
@@ -236,21 +275,32 @@ function EditModal({ isOpen, onClose, onSubmit }) {
   }
 
 function AddModal({ isOpen, onClose, onSubmit }) {
+  const [ profs, setProfs ] = useState([])
+  const [nomMatiere, setNomMatiere] = useState('')
+  const [enseignant, setEnseignant] = useState('')
 
-  const [nomMatiere, setNomMatiere] = useState('');
+  const fetchProfs = () => {
+    fetch('http://localhost:3000/professeur')
+      .then(res => res.json())
+      .then(data => setProfs(data))
+      .catch(err => console.error(err))
+  };
   
+  useEffect(() => {
+  fetchProfs()
+  }, [])
   if (!isOpen) return null;
   
   return (
     <div className="modal fixed inset-0 flex items-center justify-center z-1">
       <div className="bg-white rounded-lg shadow-lg p-6 w-100">
         <h1 className="text-lg font-semibold text-center mb-4 text-gray-800">
-          Ajout d'une salle
+          Ajout d'une matière
         </h1>
 
         <form onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(nomMatiere);
+          onSubmit(nomMatiere, enseignant);
         }}>
           <label className="block text-gray-800 me-4 mb-3" htmlFor="NomMatiere">Nom de la matière :</label>
           <input 
@@ -262,6 +312,25 @@ function AddModal({ isOpen, onClose, onSubmit }) {
             name="NomMatiere" 
             type="text" 
           />
+          <label className="block text-gray-800 me-4 mb-3" htmlFor="enseignant">Enseignant :</label>
+          <select 
+            name="enseignant"
+            value={enseignant}
+            onChange={(e) => setEnseignant(e.target.value)}
+            className="me-4 mb-4 w-full px-3 py-1 text-gray-800 outline-0 border
+            border-gray-400 shadow rounded
+            focus:shadow focus:shadow-emerald-600"
+          >
+            <option value="">Choisir un enseignant</option>
+            {
+              profs.map((prof) => (
+                <option key={prof.idprofesseur} value={prof.identifiant}>
+                  {prof.identifiant}
+                </option>
+              ))
+            }
+          </select>
+
 
           <div className="flex justify-end mt-5">
             <button type="submit" className=" me-4 bg-emerald-600 text-white px-2 py-1 rounded hover:bg-emerald-700 hover:cursor-pointer transition">
